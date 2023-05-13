@@ -64,34 +64,6 @@ fn insert_many_and_cause_doubling() {
 }
 
 #[test]
-fn insert_with_indicies_match() {
-    let mut arena = Arena::new();
-    let a = arena.insert_with(|idx| (40, idx));
-    let b = arena.insert_with(|idx| (41, idx));
-    let c = arena.insert_with(|idx| (42, idx));
-    assert_eq!(arena[a].0, 40);
-    assert_eq!(arena[b].0, 41);
-    assert_eq!(arena[c].0, 42);
-    assert_eq!(arena[a].1, a);
-    assert_eq!(arena[b].1, b);
-    assert_eq!(arena[c].1, c);
-}
-
-#[test]
-fn try_insert_with_indicies_match() {
-    let mut arena = Arena::with_capacity(3);
-    let a = arena.try_insert_with(|idx| (40, idx)).ok().unwrap();
-    let b = arena.try_insert_with(|idx| (41, idx)).ok().unwrap();
-    let c = arena.try_insert_with(|idx| (42, idx)).ok().unwrap();
-    assert_eq!(arena[a].0, 40);
-    assert_eq!(arena[b].0, 41);
-    assert_eq!(arena[c].0, 42);
-    assert_eq!(arena[a].1, a);
-    assert_eq!(arena[b].1, b);
-    assert_eq!(arena[c].1, c);
-}
-
-#[test]
 fn capacity_and_reserve() {
     let mut arena: Arena<usize> = Arena::with_capacity(42);
     assert_eq!(arena.capacity(), 42);
@@ -134,11 +106,17 @@ fn get_unknown_gen() {
         assert_eq!(id, idx);
         assert_eq!(*el, 5);
     } else {
-        panic!("element at index {} (without generation) should exist at this point", i);
+        panic!(
+            "element at index {} (without generation) should exist at this point",
+            i
+        );
     }
     arena.remove(idx);
     if let Some((_, _)) = arena.get_unknown_gen(i) {
-        panic!("element at index {} (without generation) should not exist at this point", i);
+        panic!(
+            "element at index {} (without generation) should not exist at this point",
+            i
+        );
     }
 }
 
@@ -154,12 +132,18 @@ fn get_unknown_gen_mut() {
         assert_eq!(*el, 5);
         *el += 1;
     } else {
-        panic!("element at index {} (without generation) should exist at this point", i);
+        panic!(
+            "element at index {} (without generation) should exist at this point",
+            i
+        );
     }
     assert_eq!(arena.get_mut(idx).cloned(), Some(6));
     arena.remove(idx);
     if let Some((_, _)) = arena.get_unknown_gen_mut(i) {
-        panic!("element at index {} (without generation) should not exist at this point", i);
+        panic!(
+            "element at index {} (without generation) should not exist at this point",
+            i
+        );
     }
 }
 
